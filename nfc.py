@@ -303,7 +303,7 @@ class NFC:
             tuple: (status, tag_type, UID, data)
         """
         self.init()
-        status, _ = self.request(self.REQIDL)
+        status, tag_type = self.request(self.REQIDL)
         if status != self.OK:
             return self.NOTAGERR, None, None, None
 
@@ -318,7 +318,7 @@ class NFC:
             return self.AUTHERR, None, None, None
 
         data = self._read_block(block)
-        return self.OK, None, uid, data
+        return self.OK, tag_type, uid, data
 
     def write_block(self, block, data):
         """
@@ -332,7 +332,7 @@ class NFC:
             tuple: (status, tag_type, UID)
         """
         self.init()
-        status, _ = self.request(self.REQIDL)
+        status, tag_type = self.request(self.REQIDL)
         if status != self.OK:
             return self.NOTAGERR, None, None
 
@@ -348,7 +348,7 @@ class NFC:
 
         status = self._write_block(block, data)
         self.stop_crypto()
-        return (self.OK, None, uid) if status == self.OK else (self.WRITERR, None, None)
+        return (self.OK, tag_type, uid) if status == self.OK else (self.WRITERR, None, None)
 
     def is_card_present(self):
         """
